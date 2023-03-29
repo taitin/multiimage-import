@@ -79,7 +79,7 @@ class ImportForm extends Form implements LazyRenderable
     }
     public function form()
     {
-        if ($this->sample_url != '')       $this->html('<a  href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>下載範本</a>');
+        if ($this->sample_url != '')       $this->html('<a target="_blank" href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>下載範本</a>');
         $this->setId(0);
         $id = $this->id;
         $this->hidden('id')->default($id);
