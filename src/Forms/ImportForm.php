@@ -84,7 +84,7 @@ class ImportForm extends Form implements LazyRenderable
         $this->hidden('id')->default($id);
         $this->file('file', '請選擇匯入檔案(excel)')->autoUpload()
             ->move($this->import_path . '/' . $id . '/import');
-        $this->multipleFile('files', MultiimageImportServiceProvider::trans('import.Upload_files'))
+        $this->multipleFile('files', '上傳檔案')
             ->autoUpload()
             ->move($this->import_path . '/' . $id . '/files');
     }
