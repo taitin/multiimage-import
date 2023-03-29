@@ -2,14 +2,13 @@
 
 namespace Taitin\MultiimageImport;
 
-use Dcat\Admin\Extend\ServiceProvider;
 use Dcat\Admin\Admin;
+use Illuminate\Support\ServiceProvider;
 
 class MultiimageImportServiceProvider extends ServiceProvider
 {
     protected $js = [
         'js/index.js',
-        'js/batch.js',
 
     ];
     protected $css = [
