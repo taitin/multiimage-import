@@ -13,7 +13,7 @@ class MultiImageImportTool
     {
     }
 
-    public static function make(MultiImageImport $import, $finish_url = 'finish/to/redirect', $sample_url = '', $title = '匯入檔案', $button = '匯入檔案')
+    public static function make(MultiImageImport $import, $sample_url = '', $title = '匯入檔案', $button = '匯入檔案')
     {
 
         $import_form = new ImportForm();
