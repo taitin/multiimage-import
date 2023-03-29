@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Log;
 trait ImportFunction
 {
 
+    public $import_path;
+    public function setImportPath($import_path)
+    {
+        $this->import_path = $import_path;
+    }
 
     public function setFiles($files)
     {

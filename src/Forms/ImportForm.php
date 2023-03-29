@@ -8,6 +8,7 @@ use Dcat\Admin\Traits\LazyWidget;
 use Dcat\Admin\Widgets\Form;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Taitin\MultiimageImport\Imports\MultiImageImport;
 use Taitin\MultiimageImport\MultiimageImportServiceProvider;
@@ -54,18 +55,22 @@ class ImportForm extends Form implements LazyRenderable
             if ($import === false) throw ('You need to set Import class');
             $files = $request['files'];;
             $import_files = [];
+            $import->setImportPath($this->import_path . '/' . $id . '/files/');
             foreach ($files as $file) {
                 $import_files[] = str_replace($this->import_path . '/' . $id . '/files/', '', $file);
             }
             $import->setFiles($import_files);
             $i = 1;
             $columns = $import->columns;
-            $import->import($this->import_path . '/' . $id . '/import');
+            $import->import($request['file']);
             $str = '';
 
             foreach ($import->failures() as $failure) {
                 $str .=  ' 第' . $failure->row() . '行 欄' . chr(65 + $failure->attribute()) . ':『' .  $columns[$failure->attribute()] . '』=>' . $failure->values()[$failure->attribute()] . ' 失敗原因：' . implode(' ', $failure->errors()) . '<br>';
             }
+
+            File::deleteDirectory($this->import_path . '/' . $id);
+
             return $str;
 
             //return   response()->json(['result' => true]);
