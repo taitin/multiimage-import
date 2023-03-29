@@ -36,13 +36,10 @@ class ImportForm extends Form implements LazyRenderable
         $this->import_class = $import_class;
         return $this;
     }
-    public function setFinishUrl($value)
-    {
-        $this->finish_url = $value;
-        return $this;
-    }
+
     public function setSampleUrl($value)
     {
+        session(['sample_url' => $value]);
         $this->sample_url = $value;
         return $this;
     }
@@ -82,7 +79,7 @@ class ImportForm extends Form implements LazyRenderable
     }
     public function form()
     {
-        if ($this->sample_url != '')       $this->html('<a  href="' . $this->sample_url . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>下載範本</a>');
+        if ($this->sample_url != '')       $this->html('<a  href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>下載範本</a>');
         $this->setId(0);
         $id = $this->id;
         $this->hidden('id')->default($id);
