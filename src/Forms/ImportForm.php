@@ -66,21 +66,27 @@ class ImportForm extends Form implements LazyRenderable
             $import->import(public_path('uploads/' . $request['import_file']));
             $str = '';
 
+            $last_line = '';
             foreach ($import->failures() as $failure) {
-                $str .=  ' 第' . $failure->row() . '行 欄' . chr(65 + $failure->attribute()) . ':『' .  $columns[$failure->attribute()] . '』=>' . $failure->values()[$failure->attribute()] . ' 失敗原因：' . implode(' ', $failure->errors()) . '<br>';
+                $line =  ' 第' . $failure->row() . '行 欄' . chr(65 + $failure->attribute()) . ':『' .  $columns[$failure->attribute()] . '』=>' . $failure->values()[$failure->attribute()] . ' 失敗原因：' . implode(' ', $failure->errors()) . '<br>';
+                if ($last_line != $line || 1) $str .= $line;
+                $last_line = $line;
             }
 
-            File::deleteDirectory($this->import_path . '/' . $id);
+
             if ($str != '')
-                return $this->response()->error($str)->refresh();
-            else  return $this->response()->success('匯入成功')->refresh();
+                return $this->error($str);
+            else {
+                return $this->success('匯入成功');
+                File::deleteDirectory($this->import_path . '/' . $id);
+            }
 
             //return   response()->json(['result' => true]);
         } catch (Exception $e) {
             // session()->flash('error', $e->getMessage());
 
             $str =   $e->getMessage();
-            return $this->response()->error($str);
+            return $this->error($str);
         }
     }
     public function form()
