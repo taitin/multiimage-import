@@ -20,7 +20,7 @@ class ImportForm extends Form implements LazyRenderable
     protected $import_class;
     protected $finish_url = "/finish_import_redirect";
     protected $sample_url = "/sample_url";
-    protected $import_path = "import-temp";
+    protected $import_path = "import_temp";
     protected $id;
     public function setId($value = 0)
     {
@@ -57,12 +57,13 @@ class ImportForm extends Form implements LazyRenderable
             $import_files = [];
             $import->setImportPath($this->import_path . '/' . $id . '/files/');
             foreach ($files as $file) {
-                $import_files[] = str_replace($this->import_path . '/' . $id . '/files/', '', $file);
+                $name = str_replace($this->import_path . '/' . $id . '/files/', '', $file);
+                $import_files[$name] = $name;
             }
             $import->setFiles($import_files);
             $i = 1;
             $columns = $import->columns;
-            $import->import($request['file']);
+            $import->import(public_path('uploads/' . $request['import_file']));
             $str = '';
 
             foreach ($import->failures() as $failure) {
@@ -89,7 +90,7 @@ class ImportForm extends Form implements LazyRenderable
         $this->setId(0);
         $id = $this->id;
         $this->hidden('id')->default($id);
-        $this->file('file', '請選擇匯入檔案(excel)')->autoUpload()
+        $this->file('import_file', '請選擇匯入檔案(excel)')->autoUpload()
             ->move($this->import_path . '/' . $id . '/import');
         $this->multipleFile('files', '上傳檔案')
             ->autoUpload()

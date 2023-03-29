@@ -4,6 +4,7 @@ namespace Taitin\MultiimageImport\Imports;
 
 use DateTime;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 trait ImportFunction
 {
@@ -23,15 +24,26 @@ trait ImportFunction
         if ($value == '是') return 1;
         else return 0;
     }
+
+    public function fileMove($r, $key = '')
+    {
+        $d = explode('.', $r);
+        $ext = $d[1];
+        $from  = public_path('uploads/' . $this->import_path . $r);
+        $to =   'images/' . time() . $key . '.' . $ext;
+        copy($from, public_path('uploads/' . $to));
+        return $to;
+    }
+
     public function fileMap($name, $multi = false)
     {
 
         if ($multi) {
             $v = explode(',', $name);
             $result = [];
-            foreach ($v as $r) {
+            foreach ($v as $key => $r) {
                 if (isset($this->files[$r]) && $this->files[$r] != '') {
-                    $result[] = $this->files[$r];
+                    $result[] =  $this->fileMove($r, $key);
                 }
             }
             return  $result;
@@ -39,7 +51,7 @@ trait ImportFunction
 
 
             if (isset($this->files[$name]) && $this->files[$name] != '') {
-                return $this->files[$name];
+                return $this->fileMove($name);
             } else {
                 return '';
             }
