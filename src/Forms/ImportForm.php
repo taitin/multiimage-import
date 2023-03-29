@@ -33,7 +33,7 @@ class ImportForm extends Form implements LazyRenderable
     }
     public function setImportClass(MultiImageImport $import_class)
     {
-        $this->import_class = $import_class;
+        session(['import_class' => $import_class]);
         return $this;
     }
 
@@ -50,7 +50,8 @@ class ImportForm extends Form implements LazyRenderable
         // 下面的程式碼獲取到上傳的檔案，然後使用`maatwebsite/excel`等包來處理上傳你的檔案，儲存到資料庫
         try {
             $id = $request['id'];
-            $import =   $this->import_class;
+            $import =   session('import_class', false);
+            if ($import === false) throw ('You need to set Import class');
             $files = $request['files'];;
             $import_files = [];
             foreach ($files as $file) {
