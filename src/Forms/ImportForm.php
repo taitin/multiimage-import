@@ -29,18 +29,22 @@ class ImportForm extends Form implements LazyRenderable
         } else {
             $this->id = session('import_id', 0);
         }
+        return $this;
     }
     public function setImportClass(MultiImageImport $import_class)
     {
         $this->import_class = $import_class;
+        return $this;
     }
     public function setFinishUrl($value)
     {
         $this->finish_url = $value;
+        return $this;
     }
     public function setSampleUrl($value)
     {
         $this->sample_url = $value;
+        return $this;
     }
     public function handle(array $request)
     {
