@@ -71,17 +71,16 @@ class ImportForm extends Form implements LazyRenderable
             }
 
             File::deleteDirectory($this->import_path . '/' . $id);
-
-            return $str;
+            if ($str != '')
+                return $this->response()->error($str)->refresh();
+            else  return $this->response()->success('匯入成功')->refresh();
 
             //return   response()->json(['result' => true]);
         } catch (Exception $e) {
             // session()->flash('error', $e->getMessage());
 
             $str =   $e->getMessage();
-            return $str;
-
-            //return response()->json(['result' => FALSE, 'err' => $e->getMessage()]);
+            return $this->response()->error($str);
         }
     }
     public function form()
