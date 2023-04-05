@@ -8,10 +8,12 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-class MultiImageImport implements ToModel, WithStartRow, WithValidation, SkipsOnFailure
+class MultiImageImport implements ToModel, WithStartRow, WithValidation, SkipsOnFailure, SkipsEmptyRows
 {
     use Importable, SkipsFailures, ImportFunction;
 
