@@ -102,7 +102,6 @@ class ImportForm extends Form implements LazyRenderable
                 }
             }
 
-            Log::debug($import_files);
 
             $import->setFiles($import_files);
             $i = 1;
