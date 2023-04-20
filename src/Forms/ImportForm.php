@@ -9,6 +9,7 @@ use Dcat\Admin\Widgets\Form;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Taitin\MultiimageImport\Imports\MultiImageImport;
 use Taitin\MultiimageImport\MultiimageImportServiceProvider;
@@ -44,6 +45,28 @@ class ImportForm extends Form implements LazyRenderable
         $this->sample_url = $value;
         return $this;
     }
+    public function  getAllDirData($dir)
+    {
+
+        $import_files = [];
+        $handle = @opendir($dir) or die('Cannot open' . $dir);
+        while ($file = readdir($handle)) {
+            if ($file != '.' && $file != '..') {
+
+                if (is_dir($file)) {
+                    $d = $this->getAllDirData($dir . '/' . $file);
+                    $import_files = array_merge($d, $import_files);
+                } else {
+                    $name = $dir . '/' . $file;
+                    $import_files[$name] = $name;
+                }
+            }
+        }
+        return $import_files;
+    }
+
+
+
     public function handle(array $request)
     {
 
@@ -55,11 +78,32 @@ class ImportForm extends Form implements LazyRenderable
             if ($import === false) throw ('You need to set Import class');
             $files = $request['files'];;
             $import_files = [];
-            $import->setImportPath($this->import_path . '/' . $id . '/files/');
+            $dir = $this->import_path . '/' . $id . '/files/';
+            $zip_path = 'uploads/' . $dir . 'zip';
+            $import->setImportPath($dir);
             foreach ($files as $file) {
-                $name = str_replace($this->import_path . '/' . $id . '/files/', '', $file);
-                $import_files[$name] = $name;
+                $name = str_replace($dir, '', $file);
+                if (str_contains($file, '.zip')) {
+                    $zip = new \ZipArchive();
+                    $name = public_path('uploads/' . $dir . $name);
+                    $r = $zip->open($name);
+                    $r = $zip->extractTo($zip_path); //避免覆蓋，將解壓縮資料放進該資料夾
+                    $zip->close();
+                } else $import_files[$name] = $name;
             }
+
+
+            if (is_dir($zip_path)) {
+                $files = $this->getAllDirData($zip_path);
+                $dir = 'uploads/' . $this->import_path . '/' . $id . '/files/zip/';
+                foreach ($files as $file) {
+                    $name = str_replace($dir, '', $file);
+                    $import_files[$name] = 'zip/' . $name;
+                }
+            }
+
+            Log::debug($import_files);
+
             $import->setFiles($import_files);
             $i = 1;
             $columns = $import->columns;
@@ -99,6 +143,7 @@ class ImportForm extends Form implements LazyRenderable
             ->move($this->import_path . '/' . $id . '/import');
         $this->multipleFile('files', '上傳檔案')
             ->autoUpload()
+            ->limit(100)
             ->move($this->import_path . '/' . $id . '/files');
     }
 

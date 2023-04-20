@@ -31,6 +31,10 @@ trait ImportFunction
         $ext = $d[1];
         $from  = public_path('uploads/' . $this->import_path . $r);
         $to =   'images/' . time() . $key . '.' . $ext;
+        while (file_exists(public_path('uploads/' . $to))) {
+            $key++;
+            $to =   'images/' . time() . $key . '.' . $ext;
+        }
         copy($from, public_path('uploads/' . $to));
         return $to;
     }
@@ -43,7 +47,7 @@ trait ImportFunction
             $result = [];
             foreach ($v as $key => $r) {
                 if (isset($this->files[$r]) && $this->files[$r] != '') {
-                    $result[] =  $this->fileMove($r, $key);
+                    $result[] =  $this->fileMove($this->files[$r], $key);
                 }
             }
             return  $result;
