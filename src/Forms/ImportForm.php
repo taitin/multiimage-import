@@ -145,17 +145,18 @@ class ImportForm extends Form implements LazyRenderable
     }
     public function form()
     {
-        if ($this->sample_url != '')       $this->html('<a target="_blank" href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>' . __('import.Download example') . '</a>');
+        if ($this->sample_url != '')   $this->html('<a target="_blank" href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>' . __('import.Download example') . '</a>');
         $this->setId(0);
         $id = $this->id;
         $this->hidden('id')->default($id);
         $this->file('import_file', __('import.Select File'))->autoUpload()
             ->move($this->import_path . '/' . $id . '/import');
-        if ($this->with_files)
+        if ($this->with_files) {
             $this->multipleFile('files', __('import.Upload_files'))
                 ->autoUpload()
                 ->limit(100)
                 ->move($this->import_path . '/' . $id . '/files');
+        }
     }
 
 
