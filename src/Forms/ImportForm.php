@@ -141,7 +141,7 @@ class ImportForm extends Form implements LazyRenderable
 
             $str =   $e->getMessage();
             return $this->error($str);
-        }【
+        }
     }
     public function form()
     {
