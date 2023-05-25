@@ -128,19 +128,28 @@ class ImportForm extends Form implements LazyRenderable
                 $last_line = $line;
             }
 
-
-            if ($str != '')
+            $version = Admin::VERSION;
+            if ($str != '') {
+                if (version_compare($version, '2.0', '>=')) {
+                    return $this->response()->error($str);
+                }
                 return $this->error($str);
-            else {
-                return $this->success(__('import.Import_success'));
+            } else {
                 File::deleteDirectory($this->import_path . '/' . $id);
+                if (version_compare($version, '2.0', '>=')) {
+                    return $this->response()->success(__('import.Import_success'));
+                }
+                return $this->success(__('import.Import_success'));
             }
 
             //return   response()->json(['result' => true]);
         } catch (Exception $e) {
             // session()->flash('error', $e->getMessage());
-
+            $version = Admin::VERSION;
             $str =   $e->getMessage();
+            if (version_compare($version, '2.0', '>=')) {
+                return $this->response()->error($str);
+            }
             return $this->error($str);
         }
     }
