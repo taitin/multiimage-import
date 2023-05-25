@@ -29,6 +29,10 @@ class MultiimageImportServiceProvider extends ServiceProvider
 
     }
 
+    public function boot()
+    {
+        $this->loadTranslationsFrom(__DIR__ . '/resources/lang', 'import');
+    }
     public function settingForm()
     {
         return new Setting($this);

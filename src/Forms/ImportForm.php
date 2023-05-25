@@ -23,6 +23,14 @@ class ImportForm extends Form implements LazyRenderable
     protected $sample_url = "/sample_url";
     protected $import_path = "import_temp";
     protected $id;
+    protected $with_files = true;
+
+    public function __construct($with_files = true)
+    {
+        $this->with_files = $with_files;
+    }
+
+
     public function setId($value = 0)
     {
         if (!empty($value)) {
@@ -114,7 +122,7 @@ class ImportForm extends Form implements LazyRenderable
 
             $last_line = '';
             foreach ($import->failures() as $failure) {
-                $line =  ' 第' . $failure->row() . '行 欄' . chr(65 + $failure->attribute()) . ':『' .  $columns[$failure->attribute()] . '』=>' . $failure->values()[$failure->attribute()] . ' 失敗原因：' . implode(' ', $failure->errors()) . '<br>';
+                $line =  ' ' . __('import.No') . $failure->row() . __('import.Row') . ' ' . __('import.Column') . chr(65 + $failure->attribute()) . ':『' .  $columns[$failure->attribute()] . '』=>' . $failure->values()[$failure->attribute()] . ' ' . __('Fail reason') . implode(' ', $failure->errors()) . '<br>';
                 if ($last_line != $line || 1) $str .= $line;
                 $last_line = $line;
             }
@@ -123,7 +131,7 @@ class ImportForm extends Form implements LazyRenderable
             if ($str != '')
                 return $this->error($str);
             else {
-                return $this->success('匯入成功');
+                return $this->success(__('import.Import_success'));
                 File::deleteDirectory($this->import_path . '/' . $id);
             }
 
@@ -137,16 +145,17 @@ class ImportForm extends Form implements LazyRenderable
     }
     public function form()
     {
-        if ($this->sample_url != '')       $this->html('<a target="_blank" href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>下載範本</a>');
+        if ($this->sample_url != '')       $this->html('<a target="_blank" href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>' . __('import.Download example') . '</a>');
         $this->setId(0);
         $id = $this->id;
         $this->hidden('id')->default($id);
         $this->file('import_file', __('import.Select File'))->autoUpload()
             ->move($this->import_path . '/' . $id . '/import');
-        $this->multipleFile('files', '上傳檔案')
-            ->autoUpload()
-            ->limit(100)
-            ->move($this->import_path . '/' . $id . '/files');
+        if ($this->with_files)
+            $this->multipleFile('files', __('import.Upload_files'))
+                ->autoUpload()
+                ->limit(100)
+                ->move($this->import_path . '/' . $id . '/files');
     }
 
 
