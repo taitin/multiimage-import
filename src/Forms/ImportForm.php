@@ -27,7 +27,7 @@ class ImportForm extends Form implements LazyRenderable
 
     public function withFiles($with_files = true)
     {
-        $this->with_files = $with_files;
+        session(['with_files' => $with_files]);
         return $this;
     }
 
@@ -161,6 +161,7 @@ class ImportForm extends Form implements LazyRenderable
         $this->hidden('id')->default($id);
         $this->file('import_file', __('multiimage-import::import.Select File'))->autoUpload()
             ->move($this->import_path . '/' . $id . '/import');
+        $this->with_files =   session('with_files', true);
         if ($this->with_files) {
             $this->multipleFile('files', __('multiimage-import::import.Upload_files'))
                 ->autoUpload()
