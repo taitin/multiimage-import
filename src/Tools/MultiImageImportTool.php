@@ -16,7 +16,7 @@ class MultiImageImportTool
     public static function make(MultiImageImport $import, $sample_url = '', $title = '匯入檔案', $button = '匯入檔案', $with_files = true)
     {
 
-        $import_form = new ImportForm($with_files);
+        $import_form = new ImportForm();
         $import_form->setId(time())
             ->setImportClass($import)
             ->setSampleUrl($sample_url)

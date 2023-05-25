@@ -28,6 +28,7 @@ class ImportForm extends Form implements LazyRenderable
     public function withFiles($with_files = true)
     {
         $this->with_files = $with_files;
+        return $this;
     }
 
 
