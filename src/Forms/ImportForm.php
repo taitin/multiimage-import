@@ -85,7 +85,7 @@ class ImportForm extends Form implements LazyRenderable
             $id = $request['id'];
             $import =   session('import_class', false);
             if ($import === false) throw ('You need to set Import class');
-            $files = $request['files'];;
+            $files = $request['files'] ?? [];
             $import_files = [];
             $dir = $this->import_path . '/' . $id . '/files/';
             $zip_path = 'uploads/' . $dir . 'zip';
