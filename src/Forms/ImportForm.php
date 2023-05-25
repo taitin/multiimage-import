@@ -123,7 +123,7 @@ class ImportForm extends Form implements LazyRenderable
 
             $last_line = '';
             foreach ($import->failures() as $failure) {
-                $line =  ' ' . __('multiimage-import.import.No') . $failure->row() . __('multiimage-import.import.Row') . ' ' . __('multiimage-import.import.Column') . chr(65 + $failure->attribute()) . ':『' .  $columns[$failure->attribute()] . '』=>' . $failure->values()[$failure->attribute()] . ' ' . __('Fail reason') . implode(' ', $failure->errors()) . '<br>';
+                $line =  ' ' . __('multiimage-import::import.No') . $failure->row() . __('multiimage-import::import.Row') . ' ' . __('multiimage-import::import.Column') . chr(65 + $failure->attribute()) . ':『' .  $columns[$failure->attribute()] . '』=>' . $failure->values()[$failure->attribute()] . ' ' . __('Fail reason') . implode(' ', $failure->errors()) . '<br>';
                 if ($last_line != $line || 1) $str .= $line;
                 $last_line = $line;
             }
@@ -137,9 +137,9 @@ class ImportForm extends Form implements LazyRenderable
             } else {
                 File::deleteDirectory($this->import_path . '/' . $id);
                 if (version_compare($version, '2.0', '>=')) {
-                    return $this->response()->success(__('multiimage-import.import.Import_success'))->refresh();
+                    return $this->response()->success(__('multiimage-import::import.Import_success'))->refresh();
                 }
-                return $this->success(__('multiimage-import.import.Import_success'));
+                return $this->success(__('multiimage-import::import.Import_success'));
             }
 
             //return   response()->json(['result' => true]);
@@ -155,14 +155,14 @@ class ImportForm extends Form implements LazyRenderable
     }
     public function form()
     {
-        if ($this->sample_url != '')   $this->html('<a target="_blank" href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>' . __('multiimage-import.import.Download example') . '</a>');
+        if ($this->sample_url != '')   $this->html('<a target="_blank" href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>' . __('multiimage-import::import.Download example') . '</a>');
         $this->setId(0);
         $id = $this->id;
         $this->hidden('id')->default($id);
-        $this->file('import_file', __('multiimage-import.import.Select File'))->autoUpload()
+        $this->file('import_file', __('multiimage-import::import.Select File'))->autoUpload()
             ->move($this->import_path . '/' . $id . '/import');
         if ($this->with_files) {
-            $this->multipleFile('files', __('multiimage-import.import.Upload_files'))
+            $this->multipleFile('files', __('multiimage-import::import.Upload_files'))
                 ->autoUpload()
                 ->limit(100)
                 ->move($this->import_path . '/' . $id . '/files');
