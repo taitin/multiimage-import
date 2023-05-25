@@ -25,7 +25,7 @@ class ImportForm extends Form implements LazyRenderable
     protected $id;
     protected $with_files = true;
 
-    public function disableWithFiles($with_files = true)
+    public function withFiles($with_files = true)
     {
         $this->with_files = $with_files;
     }

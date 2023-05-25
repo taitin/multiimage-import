@@ -19,8 +19,8 @@ class MultiImageImportTool
         $import_form = new ImportForm($with_files);
         $import_form->setId(time())
             ->setImportClass($import)
-            ->setSampleUrl($sample_url);
-
+            ->setSampleUrl($sample_url)
+            ->withFiles($with_files);
 
         $modal = Modal::make()
             ->lg()
