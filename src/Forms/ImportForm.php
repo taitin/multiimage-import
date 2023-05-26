@@ -125,7 +125,7 @@ class ImportForm extends Form implements LazyRenderable
             $import->setFiles($import_files);
             $i = 1;
             $columns = $import->columns;
-            $import->import(public_path('storage/'.$request['import_file']);
+            $import->import(public_path('storage/' . $request['import_file']));
             $str = '';
 
             $last_line = '';
