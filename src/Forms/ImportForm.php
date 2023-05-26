@@ -42,6 +42,12 @@ class ImportForm extends Form implements LazyRenderable
         }
         return $this;
     }
+
+    public function setImportPath($import_path)
+    {
+        session(['import_path' => $import_path]);
+        return $this;
+    }
     public function setImportClass(MultiImageImport $import_class)
     {
         session(['import_class' => $import_class]);
@@ -87,6 +93,7 @@ class ImportForm extends Form implements LazyRenderable
             if ($import === false) throw ('You need to set Import class');
             $files = $request['files'] ?? [];
             $import_files = [];
+            $this->import_path = session('import_path', 'import_temp');
             $dir = $this->import_path . '/' . $id . '/files/';
             $zip_path = 'uploads/' . $dir . 'zip';
             $import->setImportPath($dir);
@@ -118,7 +125,7 @@ class ImportForm extends Form implements LazyRenderable
             $import->setFiles($import_files);
             $i = 1;
             $columns = $import->columns;
-            $import->import(public_path('uploads/' . $request['import_file']));
+            $import->import(public_path($request['import_file']));
             $str = '';
 
             $last_line = '';
@@ -159,6 +166,8 @@ class ImportForm extends Form implements LazyRenderable
         $this->setId(0);
         $id = $this->id;
         $this->hidden('id')->default($id);
+        $this->import_path = session('import_path', 'import_temp');
+
         $this->file('import_file', __('multiimage-import::import.Select File'))->autoUpload()
             ->move($this->import_path . '/' . $id . '/import');
         $this->with_files =   session('with_files', true);
