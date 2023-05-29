@@ -125,6 +125,7 @@ class ImportForm extends Form implements LazyRenderable
             $import->setFiles($import_files);
             $i = 1;
             $columns = $import->columns;
+
             $import->import(public_path('stoarge/' . $request['import_file']));
             $str = '';
 
