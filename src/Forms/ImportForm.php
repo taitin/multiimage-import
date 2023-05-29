@@ -125,7 +125,7 @@ class ImportForm extends Form implements LazyRenderable
             $import->setFiles($import_files);
             $i = 1;
             $columns = $import->columns;
-            $import->import($request['import_file']);
+            $import->import(public_path($request['import_file']));
             $str = '';
 
             $last_line = '';
@@ -142,7 +142,7 @@ class ImportForm extends Form implements LazyRenderable
                 }
                 return $this->error($str);
             } else {
-                File::deleteDirectory($this->import_path . '/' . $id);
+                File::deleteDirectory(public_path($this->import_path . '/' . $id));
                 if (version_compare($version, '2.0', '>=')) {
                     return $this->response()->success(__('multiimage-import::import.Import_success'))->refresh();
                 }
