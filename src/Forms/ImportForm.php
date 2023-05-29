@@ -169,13 +169,13 @@ class ImportForm extends Form implements LazyRenderable
         $this->import_path = session('import_path', 'import_temp');
 
         $this->file('import_file', __('multiimage-import::import.Select File'))->autoUpload()
-            ->move(public_path('storage/' . $this->import_path . '/' . $id . '/import'));
+            ->move(storage_path($this->import_path . '/' . $id . '/import'));
         $this->with_files =   session('with_files', true);
         if ($this->with_files) {
             $this->multipleFile('files', __('multiimage-import::import.Upload_files'))
                 ->autoUpload()
                 ->limit(100)
-                ->move(public_path('storage/' . $this->import_path . '/' . $id . '/files'));
+                ->move(storage_path($this->import_path . '/' . $id . '/files'));
         }
     }
 
