@@ -125,7 +125,7 @@ class ImportForm extends Form implements LazyRenderable
             $import->setFiles($import_files);
             $i = 1;
             $columns = $import->columns;
-            $import->import(public_path($request['import_file']));
+            $import->import(public_path('stoarge/' . $request['import_file']));
             $str = '';
 
             $last_line = '';
@@ -142,7 +142,7 @@ class ImportForm extends Form implements LazyRenderable
                 }
                 return $this->error($str);
             } else {
-                File::deleteDirectory(public_path($this->import_path . '/' . $id));
+                File::deleteDirectory(public_path('stoarge/' . $this->import_path . '/' . $id));
                 if (version_compare($version, '2.0', '>=')) {
                     return $this->response()->success(__('multiimage-import::import.Import_success'))->refresh();
                 }
@@ -169,13 +169,13 @@ class ImportForm extends Form implements LazyRenderable
         $this->import_path = session('import_path', 'import_temp');
 
         $this->file('import_file', __('multiimage-import::import.Select File'))->autoUpload()
-            ->move('storage/' . $this->import_path . '/' . $id . '/import');
+            ->move($this->import_path . '/' . $id . '/import');
         $this->with_files =   session('with_files', true);
         if ($this->with_files) {
             $this->multipleFile('files', __('multiimage-import::import.Upload_files'))
                 ->autoUpload()
                 ->limit(100)
-                ->move('storage/' . $this->import_path . '/' . $id . '/files');
+                ->move($this->import_path . '/' . $id . '/files');
         }
     }
 
