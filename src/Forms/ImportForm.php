@@ -95,7 +95,7 @@ class ImportForm extends Form implements LazyRenderable
             $import_files = [];
             $this->import_path = session('import_path', 'import_temp');
             $dir = $this->import_path . '/' . $id . '/files/';
-            $zip_path = 'uploads/' . $dir . 'zip';
+            $zip_path = public_path('storage/' . $dir . 'zip');
             $import->setImportPath($dir);
             foreach ($files as $file) {
                 $name = str_replace($dir, '', $file);
@@ -112,7 +112,7 @@ class ImportForm extends Form implements LazyRenderable
             if (is_dir($zip_path)) {
                 $files = $this->getAllDirData($zip_path);
 
-                $dir = 'uploads/' . $this->import_path . '/' . $id . '/files/zip/';
+                $dir = public_path('storage/' . $this->import_path . '/' . $id . '/files/zip/');
                 foreach ($files as $file) {
                     $name = str_replace($dir, '', $file);
                     $r = explode('/', $name);
