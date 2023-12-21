@@ -29,13 +29,13 @@ trait ImportFunction
     {
         $d = explode('.', $r);
         $ext = $d[1];
-        $from  = public_path('uploads/' . $this->import_path . $r);
+        $from  = public_path('storage/' . $this->import_path . $r);
         $to =   'images/' . time() . $key . '.' . $ext;
-        while (file_exists(public_path('uploads/' . $to))) {
+        while (file_exists(public_path('storage/' . $to))) {
             $key++;
             $to =   'images/' . time() . $key . '.' . $ext;
         }
-        copy($from, public_path('uploads/' . $to));
+        copy($from, public_path('storage/' . $to));
         return $to;
     }
 
