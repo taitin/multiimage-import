@@ -31,7 +31,7 @@ class MultiimageImportServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        $this->loadTranslationsFrom(dirname(__DIR__) . '/resources/lang', 'multiimage-import');
+        $this->loadTranslationsFrom(dirname(__DIR__) . '/../resources/lang', 'multiimage-import');
     }
     public function settingForm()
     {
