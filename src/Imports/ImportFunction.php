@@ -107,7 +107,9 @@ trait ImportFunction
         }
         // 接收的日期如果是數值型則用PHPExcel的內建方法轉換成時間戳
         if (is_numeric($date)) {
-            return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date));
+            $t = \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date));
+            //按格式返回
+            return $t->format($format);
         }
         $date = str_replace(['號', '日'], '', $date);
         $date = str_replace(['年', '月', '.', '—', '——', '/', '－', '－－'], '-', $date);
