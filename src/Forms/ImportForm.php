@@ -89,11 +89,11 @@ class ImportForm extends Form implements LazyRenderable
         // 下面的程式碼獲取到上傳的檔案，然後使用`maatwebsite/excel`等包來處理上傳你的檔案，儲存到資料庫
         try {
             $id = $request['id'];
-            $import =  request('import_class', session('import_class'));
+            $import =   $this->payload['import_class'] ?? session('import_class', null);
             if ($import === false) throw ('You need to set Import class');
             $files = $request['files'] ?? [];
             $import_files = [];
-            $this->import_path = request('import_path', session('import_path', $this->import_path));
+            $this->import_path = $this->payload['import_path'] ?? session('import_path', $this->import_path);
             $dir = $this->import_path . '/' . $id . '/files/';
             $zip_path = public_path('storage/' . $dir . 'zip');
             $import->setImportPath($dir);
