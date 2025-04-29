@@ -48,11 +48,7 @@ class ImportForm extends Form implements LazyRenderable
         session(['import_path' => $import_path]);
         return $this;
     }
-    public function setImportClass(MultiImageImport $import_class)
-    {
-        $this->import_class = $import_class;
-        return $this;
-    }
+
 
     public function setSampleUrl($value)
     {
@@ -90,6 +86,7 @@ class ImportForm extends Form implements LazyRenderable
         try {
             $id = $request['id'];
             $className = $this->payload['import_class'] ?? session('import_class', null);
+            dd($className);
             if (!class_exists($className)) {
                 throw new \Exception('Import class not found.');
             }
