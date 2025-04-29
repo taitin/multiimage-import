@@ -120,7 +120,7 @@ class ImportForm extends Form implements LazyRenderable
                     $import_files[$index] = 'zip/' . $name;
                 }
             }
-
+            dump($import_files);
 
             $import->setFiles($import_files);
             $i = 1;
