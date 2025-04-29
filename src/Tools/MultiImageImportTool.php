@@ -16,7 +16,7 @@ class MultiImageImportTool
 
 
         $import_form  =  ImportForm::make()->payload([
-            'import_class' => $import,
+            'import_class' => get_class($import),
             'sample_url' => $sample_url,
             'with_files' => $with_files,
         ]);

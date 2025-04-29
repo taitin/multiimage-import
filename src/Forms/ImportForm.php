@@ -50,7 +50,7 @@ class ImportForm extends Form implements LazyRenderable
     }
     public function setImportClass(MultiImageImport $import_class)
     {
-        session(['import_class' => $import_class]);
+        $this->import_class = $import_class;
         return $this;
     }
 
@@ -89,8 +89,16 @@ class ImportForm extends Form implements LazyRenderable
         // 下面的程式碼獲取到上傳的檔案，然後使用`maatwebsite/excel`等包來處理上傳你的檔案，儲存到資料庫
         try {
             $id = $request['id'];
-            $import =   $this->payload['import_class'] ?? session('import_class', null);
-            if ($import === false) throw ('You need to set Import class');
+            $className = $this->payload['import_class'] ?? session('import_class', null);
+            if (!class_exists($className)) {
+                throw new \Exception('Import class not found.');
+            }
+
+            $import = app($className); // ← 正確方式：用 class 名稱 new 出物件
+
+            if (! $import instanceof \Taitin\MultiimageImport\Imports\MultiImageImport) {
+                throw new \Exception('Import class must extend MultiImageImport.');
+            }
             $files = $request['files'] ?? [];
             $import_files = [];
             $this->import_path = $this->payload['import_path'] ?? session('import_path', $this->import_path);
@@ -120,7 +128,6 @@ class ImportForm extends Form implements LazyRenderable
                     $import_files[$index] = 'zip/' . $name;
                 }
             }
-            dump($import_files);
 
             $import->setFiles($import_files);
             $i = 1;
