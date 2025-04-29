@@ -163,15 +163,18 @@ class ImportForm extends Form implements LazyRenderable
     }
     public function form()
     {
-        if ($this->sample_url != '')   $this->html('<a target="_blank" href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>' . __('multiimage-import::import.Download example') . '</a>');
+        $this->sample_url = request()->input('sample_url');
+        // if ($this->sample_url != '')   $this->html('<a target="_blank" href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>' . __('multiimage-import::import.Download example') . '</a>');
+        $this->html('<a target="_blank" href="' . $this->sample_url . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>' . __('multiimage-import::import.Download example') . '</a>');
+
         $this->setId(0);
         $id = $this->id;
         $this->hidden('id')->default($id);
-        $this->import_path = session('import_path', 'import_temp');
+        $this->import_path = request()->input('import_path', $this->import_path);
 
         $this->file('import_file', __('multiimage-import::import.Select File'))->autoUpload()
             ->move($this->import_path . '/' . $id . '/import');
-        $this->with_files =   session('with_files', true);
+        $this->with_files =  request()->input('with_files', $this->with_files);
         if ($this->with_files) {
             $this->multipleFile('files', __('multiimage-import::import.Upload_files'))
                 ->autoUpload()

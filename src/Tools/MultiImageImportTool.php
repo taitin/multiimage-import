@@ -9,18 +9,17 @@ use Taitin\MultiimageImport\Imports\MultiImageImport;
 class MultiImageImportTool
 {
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public static function make(MultiImageImport $import, $sample_url = '', $title = '匯入檔案', $button = '匯入檔案', $with_files = true)
     {
 
-        $import_form = new ImportForm();
-        $import_form->setId(time())
-            ->setImportClass($import)
-            ->setSampleUrl($sample_url)
-            ->withFiles($with_files);
+
+        $import_form  =  ImportForm::make()->payload([
+            'import_class' => $import,
+            'sample_url' => $sample_url,
+            'with_files' => $with_files,
+        ]);
 
         $modal = Modal::make()
             ->lg()

@@ -8,4 +8,8 @@ return [
         'Update.',
     ],
 
+    '1.0.2' => [
+        'fix mutil problem.',
+    ],
+
 ];
