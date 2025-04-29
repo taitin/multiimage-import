@@ -96,7 +96,7 @@ class ImportForm extends Form implements LazyRenderable
             $this->import_path = $this->payload['import_path'] ?? session('import_path', $this->import_path);
             $dir = $this->import_path . '/' . $id . '/files/';
             $zip_path = public_path('storage/' . $dir . 'zip');
-            $import->setImportPath($dir);
+            // $import->setImportPath($dir);
             foreach ($files as $file) {
                 $name = str_replace($dir, '', $file);
                 if (str_contains($file, '.zip')) {
