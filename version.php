@@ -26,4 +26,10 @@ return [
         'Auto-create extraction directory if not exists.',
     ],
 
+    '1.0.5' => [
+        'Fix ZIP file path duplication issue.',
+        'Correct ZIP file path construction to use uploaded file path directly.',
+        'Prevent path errors like import_temp/ID/files/import_temp/ID/files/',
+    ],
+
 ];

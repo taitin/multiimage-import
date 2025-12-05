@@ -108,7 +108,8 @@ class ImportForm extends Form implements LazyRenderable
                 $name = str_replace($dir, '', $file);
                 if (str_contains($file, '.zip')) {
                     $zip = new \ZipArchive();
-                    $zipFile = public_path('storage/' . $dir . $name);
+                    // $file 已經是完整的相對路徑,直接使用
+                    $zipFile = public_path('storage/' . $file);
                     
                     // 檢查 ZIP 檔案是否存在
                     if (!file_exists($zipFile)) {

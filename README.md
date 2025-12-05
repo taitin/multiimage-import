@@ -35,6 +35,11 @@ $grid->tools(function ($tools) {
 
 ## 版本歷史
 
+### v1.0.5 (2025-12-05)
+- 🐛 修正 ZIP 檔案路徑重複問題
+- ✅ 直接使用上傳檔案路徑,避免路徑重複拼接
+- 🔧 防止出現 `import_temp/ID/files/import_temp/ID/files/` 的錯誤路徑
+
 ### v1.0.4 (2025-12-05)
 - 🐛 修正 `ZipArchive::extractTo()` Invalid or uninitialized Zip object 錯誤
 - ✅ 在解壓縮前檢查 ZIP 檔案是否成功開啟
