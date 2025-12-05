@@ -31,12 +31,28 @@ trait ImportFunction
         $ext = $d[1];
         $from  = public_path('storage/' . $this->import_path . $r);
         $to =   'images/' . time() . $key . '.' . $ext;
+        
+        // 檢查來源檔案是否存在
+        if (!file_exists($from)) {
+            Log::warning("Import file not found, skipping: {$from}");
+            return ''; // 返回空字串,繼續處理其他檔案
+        }
+        
         while (file_exists(public_path('storage/' . $to))) {
             $key++;
             $to =   'images/' . time() . $key . '.' . $ext;
         }
-        copy($from, public_path('storage/' . $to));
-        return $to;
+        
+        // 嘗試複製檔案,如果失敗則記錄錯誤並跳過
+        try {
+            if (!copy($from, public_path('storage/' . $to))) {
+                throw new \Exception("Failed to copy file");
+            }
+            return $to;
+        } catch (\Exception $e) {
+            Log::error("Failed to copy file from {$from} to {$to}: " . $e->getMessage());
+            return ''; // 返回空字串,繼續處理
+        }
     }
 
     public function fileMap($name, $multi = false)

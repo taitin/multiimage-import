@@ -32,4 +32,11 @@ return [
         'Prevent path errors like import_temp/ID/files/import_temp/ID/files/',
     ],
 
+    '1.0.6' => [
+        'Handle missing files gracefully during import.',
+        'Skip missing files with warning log instead of failing entire import.',
+        'Add file existence check before copy operation.',
+        'Improve error handling with try-catch in fileMove method.',
+    ],
+
 ];
