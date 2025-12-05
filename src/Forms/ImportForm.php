@@ -112,7 +112,7 @@ class ImportForm extends Form implements LazyRenderable
                     
                     // 檢查 ZIP 檔案是否存在
                     if (!file_exists($zipFile)) {
-                        throw new \Exception("ZIP file not found: " . $name);
+                        throw new \Exception("ZIP file not found: {$zipFile}");
                     }
                     
                     // 嘗試開啟 ZIP 檔案
