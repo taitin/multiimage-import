@@ -34,11 +34,14 @@ class ImportForm extends Form implements LazyRenderable
 
     public function setId($value = 0)
     {
-        if (!empty($value)) {
+        // 明確檢查是否為有效的非零值
+        if ($value !== 0 && $value !== '0' && !empty($value)) {
             $this->id = $value;
             session(['import_id' => $this->id]);
         } else {
-            $this->id = session('import_id', 0);
+            // 總是生成新的唯一 ID（時間戳記 + 微秒）
+            $this->id = time() . substr(microtime(), 2, 6);
+            session(['import_id' => $this->id]);
         }
         return $this;
     }
@@ -166,12 +169,20 @@ class ImportForm extends Form implements LazyRenderable
     }
     public function form()
     {
+        // 清除可能存在的舊 session,確保每次都使用新的 ID
+        session()->forget('import_id');
+        
         $this->sample_url = request()->input('sample_url');
         // if ($this->sample_url != '')   $this->html('<a target="_blank" href="' . session('sample_url', $this->sample_url) . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>' . __('multiimage-import::import.Download example') . '</a>');
         $this->html('<a target="_blank" href="' . $this->sample_url . '" class="btn btn-primary ml-1"><i class="feather icon-download"></i>' . __('multiimage-import::import.Download example') . '</a>');
 
-        $this->setId(0);
+        // 永遠生成新的唯一 ID,避免多使用者衝突
+        $uniqueId = time() . substr(microtime(), 2, 6);
+        $this->setId($uniqueId);
         $id = $this->id;
+        
+        // 清理超過 24 小時的舊臨時目錄
+        $this->cleanOldDirectories();
         $this->hidden('id')->default($id);
         $this->import_path = request()->input('import_path', $this->import_path);
 
@@ -188,10 +199,47 @@ class ImportForm extends Form implements LazyRenderable
 
 
 
+    /**
+     * 清理超過 24 小時的臨時目錄
+     * 防止臨時檔案佔用過多儲存空間
+     */
+    protected function cleanOldDirectories()
+    {
+        try {
+            $basePath = public_path('storage/' . $this->import_path);
+            
+            // 如果基礎路徑不存在,直接返回
+            if (!File::isDirectory($basePath)) {
+                return;
+            }
+            
+            $cutoffTime = time() - 86400; // 24 小時前的時間戳記
+            
+            foreach (File::directories($basePath) as $dir) {
+                $dirName = basename($dir);
+                
+                // 只處理數字命名的目錄(時間戳記目錄)
+                if (is_numeric($dirName)) {
+                    // 提取目錄名稱中的時間戳記部分(前10位)
+                    $dirTimestamp = intval(substr($dirName, 0, 10));
+                    
+                    // 如果目錄建立時間超過 24 小時,刪除它
+                    if ($dirTimestamp < $cutoffTime) {
+                        File::deleteDirectory($dir);
+                        Log::info('Cleaned old import directory: ' . $dirName);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            // 記錄錯誤但不中斷流程
+            Log::warning('Failed to clean old import directories: ' . $e->getMessage());
+        }
+    }
+
     //     public function html()
     //     {
     //         return <<<HTML
     //         <a class="btn btn-sm btn-success import-class"><i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;匯入資料</a>
-    // HTML;
+// HTML;
     //     }
 }
