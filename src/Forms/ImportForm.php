@@ -161,11 +161,13 @@ class ImportForm extends Form implements LazyRenderable
                     $name = str_replace($dir, '', $file);
                     $r = explode('/', $name);
                     $index = $r[count($r) - 1];
-                    $import_files[$index] = 'zip/' . $name;
+                    $import_files[$index] = $this->import_path . '/' . $id . '/files/zip/' . $name;
                 }
             }
 
             $import->setFiles($import_files);
+            // 設定正確的 import_path,讓 fileMove 可以找到檔案
+            $import->setImportPath('');
             $i = 1;
             $columns = $import->columns;
 

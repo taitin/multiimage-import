@@ -39,4 +39,10 @@ return [
         'Improve error handling with try-catch in fileMove method.',
     ],
 
+    '1.0.7' => [
+        'Fix ZIP extracted file path for import.',
+        'Set correct file path including full import_temp path.',
+        'Ensure fileMove can locate ZIP extracted files correctly.',
+    ],
+
 ];
