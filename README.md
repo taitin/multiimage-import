@@ -35,6 +35,12 @@ $grid->tools(function ($tools) {
 
 ## 版本歷史
 
+### v1.0.4 (2025-12-05)
+- 🐛 修正 `ZipArchive::extractTo()` Invalid or uninitialized Zip object 錯誤
+- ✅ 在解壓縮前檢查 ZIP 檔案是否成功開啟
+- 📝 提供詳細的 ZIP 檔案錯誤訊息
+- 📁 自動建立解壓縮目錄
+
 ### v1.0.3 (2025-12-05)
 - 🐛 修正檔案上傳衝突導致的 `errno=21 Is a directory` 錯誤
 - ✨ 改進 `setId()` 方法,總是生成唯一 ID(時間戳記 + 微秒)

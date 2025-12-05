@@ -108,11 +108,47 @@ class ImportForm extends Form implements LazyRenderable
                 $name = str_replace($dir, '', $file);
                 if (str_contains($file, '.zip')) {
                     $zip = new \ZipArchive();
-                    $name = public_path('storage/' . $dir . $name);
-                    $r = $zip->open($name);
-                    $r = $zip->extractTo($zip_path); //避免覆蓋，將解壓縮資料放進該資料夾
+                    $zipFile = public_path('storage/' . $dir . $name);
+                    
+                    // 檢查 ZIP 檔案是否存在
+                    if (!file_exists($zipFile)) {
+                        throw new \Exception("ZIP file not found: " . $name);
+                    }
+                    
+                    // 嘗試開啟 ZIP 檔案
+                    $openResult = $zip->open($zipFile);
+                    if ($openResult !== true) {
+                        // 提供更詳細的錯誤訊息
+                        $errorMessages = [
+                            \ZipArchive::ER_EXISTS => 'File already exists',
+                            \ZipArchive::ER_INCONS => 'Zip archive inconsistent',
+                            \ZipArchive::ER_INVAL => 'Invalid argument',
+                            \ZipArchive::ER_MEMORY => 'Malloc failure',
+                            \ZipArchive::ER_NOENT => 'No such file',
+                            \ZipArchive::ER_NOZIP => 'Not a zip archive',
+                            \ZipArchive::ER_OPEN => 'Can\'t open file',
+                            \ZipArchive::ER_READ => 'Read error',
+                            \ZipArchive::ER_SEEK => 'Seek error',
+                        ];
+                        $errorMsg = $errorMessages[$openResult] ?? 'Unknown error';
+                        throw new \Exception("Failed to open ZIP file '{$name}': {$errorMsg} (Error code: {$openResult})");
+                    }
+                    
+                    // 建立解壓縮目錄
+                    if (!File::isDirectory($zip_path)) {
+                        File::makeDirectory($zip_path, 0755, true);
+                    }
+                    
+                    // 解壓縮檔案
+                    if (!$zip->extractTo($zip_path)) {
+                        $zip->close();
+                        throw new \Exception("Failed to extract ZIP file: " . $name);
+                    }
+                    
                     $zip->close();
-                } else $import_files[$name] = $name;
+                } else {
+                    $import_files[$name] = $name;
+                }
             }
 
 

@@ -19,4 +19,11 @@ return [
         'Prevent multi-user file path conflicts.',
     ],
 
+    '1.0.4' => [
+        'Fix ZipArchive::extractTo() Invalid or uninitialized Zip object error.',
+        'Add proper ZIP file validation before extraction.',
+        'Provide detailed error messages for ZIP file failures.',
+        'Auto-create extraction directory if not exists.',
+    ],
+
 ];
